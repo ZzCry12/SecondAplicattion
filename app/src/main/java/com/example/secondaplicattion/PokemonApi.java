@@ -1,7 +1,5 @@
 package com.example.secondaplicattion;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PokemonApi {
-    void getPokemons() {
+    ArrayList<Pokemon> getPokemons() {
         String url = "https://pokeapi.co/api/v2/pokemon";
 
         try {
@@ -29,12 +27,20 @@ public class PokemonApi {
                 pokemon.setName(pokemonJson.getString("name"));
                 pokemon.setDetailsUrl(pokemonJson.getString("url"));
 
+                String resultDetails = HttpUtils.get(pokemon.getDetailsUrl());
+                JSONObject jsonDetails = new JSONObject(resultDetails);
+
+                pokemon.setHeight(jsonDetails.getInt("height"));
+                pokemon.setWeight(jsonDetails.getInt("Weight"));
+                pokemon.setImage(jsonDetails.getString(url));
+
                 pokemons.add(pokemon);
             }
 
-            Log.e("XXX POKEMONS XXX", pokemons.toString());
+            return pokemons;
         } catch (IOException | JSONException ex) {
             ex.printStackTrace();
         }
+        return null;
     }
 }

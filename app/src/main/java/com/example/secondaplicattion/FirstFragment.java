@@ -1,6 +1,8 @@
 package com.example.secondaplicattion;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import java.util.concurrent.Executors;
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+    private ArrayAdapter<String> adapter;
 
     @Override
     public View onCreateView(
@@ -39,7 +42,7 @@ public class FirstFragment extends Fragment {
         items.add("Snorlax");
         items.add("evee");
 
-        ArrayAdapter<String> adapter= new ArrayAdapter<String>(
+        adapter = new ArrayAdapter<String>(
                 getContext(),
                 R.layout.lv_pokemon_row,
                 R.id.txtpokemon,
@@ -61,9 +64,14 @@ public class FirstFragment extends Fragment {
     }
     private void refresh() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
             PokemonApi api = new PokemonApi();
-            api.getPokemons();
+            ArrayList<Pokemon> pokemons = api.getPokemons();
+            handler.post(()-> {
+                adapter.clear();
+                adapter.addAll(pokemons);
+            });
         });
 
 }}
