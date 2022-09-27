@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
-    private ArrayAdapter<String> adapter;
+    private ArrayAdapter adapter;
 
     @Override
     public View onCreateView(
